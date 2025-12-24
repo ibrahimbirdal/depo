@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeTime | Premium Dünya Kahveleri</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --dark: #2c1e1a;
+            --accent: #d84315;
+            --accent-hover: #bf360c;
+            --bg: #fdfbf7;
+            --white: #fff;
+            --gray: #757575;
+            --light-brown: #efebe9;
+            --border: #e0e0e0;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+        
+        html{
+            scroll-behavior:smooth;
+            scroll-padding-top: 90px; 
+        }
+        
+        body{background:var(--bg); color: var(--dark); line-height: 1.6;}
+        body.no-scroll { overflow: hidden; }
+
+        /* --- Header --- */
+        header{
+            background:var(--dark);
+            color:#fff;
+            padding:15px 5%;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:sticky;
+            top:0;
+            z-index:1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .logo{color:#fff;text-decoration:none;font-size:1.6rem;font-weight:700; display:flex; align-items:center; gap:10px;}
+        nav ul{list-style:none;display:flex;gap:30px}
+        nav a{color:var(--light-brown);text-decoration:none;font-size:1rem; font-weight: 500; transition:0.3s; position: relative;}
+        nav a:hover{color:var(--accent);}
+        nav a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background-color: var(--accent); transition: width 0.3s;
+        }
+        nav a:hover::after { width: 100%; }
+        
+        .cart-box{
+            background:var(--accent);
+            padding:10px 20px;
+            border-radius:30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 10px rgba(216, 67, 21, 0.3);
+        }
+        .cart-box:hover{background: var(--accent-hover); transform: translateY(-2px);}
+
+        /* --- Hero Section --- */
+        #home{
+            height:65vh;
+            background: linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.7)), url("https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1400&q=80");
+            background-size:cover;
+            background-position:center;
+            background-attachment: fixed;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            text-align:center;
+            padding: 0 20px;
+        }
+        #home h1 { font-size: 3.5rem; margin-bottom: 15px; letter-spacing: 1px; }
+        #home p { font-size: 1.2rem; max-width: 600px; margin-bottom: 30px; opacity: 0.9; }
+        .hero-btn {
+            padding:15px 45px; background:var(--accent); border:none; color:#fff; 
+            border-radius:50px; cursor:pointer; font-weight:700; font-size:1.1rem; 
+            transition:0.3s; text-decoration: none; display: inline-block;
+        }
+        .hero-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+
+        /* --- Section Titles --- */
+        .section-title {
+            text-align: center; font-size: 2.2rem; margin-bottom: 10px; color: var(--dark);
+        }
+        .section-subtitle {
+            text-align: center; color: var(--gray); margin-bottom: 40px; font-size: 1rem;
+        }
+
+        /* --- Filters --- */
+        .filters-container {
+            position: sticky; top: 75px; z-index: 900; background: var(--bg);
+            padding: 20px 0; border-bottom: 1px solid #eee; margin-bottom: 20px;
+        }
+        .filters{text-align:center; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;}
+        .filter-btn{
+            padding:8px 20px;
+            border:1px solid var(--dark);
+            background:transparent;
+            border-radius:25px;
+            cursor:pointer;
+            font-weight:600;
+            transition: all 0.3s;
+            color: var(--dark);
+        }
+        .filter-btn.active, .filter-btn:hover{background:var(--dark); color:#fff; border-color: var(--dark);}
+
+        /* --- Menu Grid (3'lü Yapı Ayarı) --- */
+        .menu-section { padding: 40px 5%; }
+        .menu-grid{
+            display:grid;
+            /* BURASI GÜNCELLENDİ: 3 Eşit Kolon */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .card{
+            background:#fff; border-radius:15px; overflow:hidden;
+            box-shadow:0 10px 20px rgba(0,0,0,.05);
+            transition: 0.3s; display: flex; flex-direction: column;
+            border: 1px solid var(--light-brown);
+        }
+        .card:hover{transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1);}
+        .card img{
+            width:100%; height:250px; object-fit:cover; transition: 0.5s;
+        }
+        .card:hover img { transform: scale(1.05); }
+
+        .card-body{padding:20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;}
+        .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
+        .badge-country{background:var(--light-brown); color: var(--dark); padding:4px 10px; font-size:0.8rem; font-weight:600; border-radius:8px;}
+        
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+        .price{color:var(--accent);font-size:1.4rem;font-weight:700;}
+        
+        .add-btn{
+            padding:10px 20px; background:var(--dark); color:#fff; border:none;
+            border-radius:8px; cursor:pointer; font-weight: 600; font-size: 0.9rem;
+            transition: 0.3s; display: flex; align-items: center; gap: 5px;
+        }
+        .add-btn:hover{background:var(--accent);}
+
+        /* --- CONTACT SECTION --- */
+        #contact { background: #fff; padding: 60px 5%; margin-top: 50px; }
+        .contact-container {
+            display: flex; flex-wrap: wrap; gap: 40px; max-width: 1200px; margin: 0 auto;
+        }
+        .contact-info { flex: 1; min-width: 300px; }
+        .contact-form-wrapper { flex: 1; min-width: 300px; background: var(--bg); padding: 30px; border-radius: 20px; border: 1px solid #eee; }
+        
+        .info-item { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .info-icon { width: 50px; height: 50px; background: var(--light-brown); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1.2rem; flex-shrink: 0; }
+        .info-text h4 { font-size: 1.1rem; margin-bottom: 2px; }
+        .info-text p, .info-text a { color: var(--gray); text-decoration: none; font-size: 0.95rem; }
+        .info-text a:hover { color: var(--accent); }
+
+        .map-container { margin-top: 30px; width: 100%; height: 250px; border-radius: 15px; overflow: hidden; }
+        .map-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* --- Form Styles --- */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9rem; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; transition: 0.3s; background: #fff; }
+        .form-control:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(216, 67, 21, 0.1); }
+        textarea.form-control { resize: vertical; min-height: 120px; }
+        .submit-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .submit-btn:hover { background: var(--accent-hover); }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: #fff; padding: 30px; border-radius: 20px; width: 95%; max-width: 500px;
+            max-height: 90vh; overflow-y: auto; position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--gray); }
+        
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+        .cart-total { margin-top: 20px; font-size: 1.3rem; font-weight: 700; text-align: right; color: var(--dark); }
+        
+        /* --- Footer --- */
+        footer{background:var(--dark); color:#ccc; padding:40px 20px; text-align:center; font-size: 0.9rem; border-top: 4px solid var(--accent); }
+        .social-icons { margin-top: 15px; display: flex; justify-content: center; gap: 20px; }
+        .social-icons i { font-size: 1.2rem; cursor: pointer; transition: 0.3s; color: #fff; }
+        .social-icons i:hover { color: var(--accent); }
+
+        /* --- Notification --- */
+        .notification {
+            position: fixed; bottom: 30px; right: 30px; background: var(--dark); color: #fff;
+            padding: 15px 25px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+            z-index: 3000; font-weight: 500; display: flex; align-items: center; gap: 10px;
+        }
+        .notification.show { transform: translateY(0); opacity: 1; }
+        .notification.success { border-left: 5px solid #4CAF50; }
+
+        /* --- Responsive / Mobil Ayarları --- */
+        @media(max-width: 1024px){
+            /* Tablet: 2'li görünüm */
+            .menu-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media(max-width: 768px){
+            /* Mobil: Header ve Hero ayarları */
+            header { flex-wrap: wrap; gap: 15px; padding: 15px 20px; }
+            nav { order: 3; width: 100%; overflow-x: auto; padding-bottom: 5px; }
+            nav ul { width: max-content; }
+            .contact-container { flex-direction: column; gap: 30px; }
+            #home h1 { font-size: 2.5rem; }
+            .filters-container { top: 110px; }
+            
+            /* Mobil: 1'li görünüm */
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a href="#home" class="logo"><i class="fas fa-mug-hot"></i> CoffeeTime</a>
+    <nav>
+        <ul>
+            <li><a href="#home">Ana Sayfa</a></li>
+            <li><a href="#menu">Menü</a></li>
+            <li><a href="#contact">İletişim</a></li>
+        </ul>
+    </nav>
+    <div class="cart-box" onclick="openCart()">
+        <i class="fas fa-shopping-basket"></i> <span id="cart-text">Sepet</span> <span id="cart-count">(0)</span>
+    </div>
+</header>
+
+<section id="home">
+    <h1>Kahvenin En İyi Hali</h1>
+    <p>Dünyanın dört bir yanından seçilmiş çekirdekler, usta ellerde sanata dönüşüyor.</p>
+    <a href="#menu" class="hero-btn">Lezzetleri Keşfet</a>
+</section>
+
+<div class="filters-container">
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterCoffee('Tümü',this)">Tümü</button>
+        <button class="filter-btn" onclick="filterCoffee('Türkiye',this)">Türkiye</button>
+        <button class="filter-btn" onclick="filterCoffee('Avrupa',this)">Avrupa</button>
+        <button class="filter-btn" onclick="filterCoffee('Amerika',this)">Amerika</button>
+        <button class="filter-btn" onclick="filterCoffee('Asya',this)">Asya</button>
+        <button class="filter-btn" onclick="filterCoffee('Afrika',this)">Afrika</button>
+    </div>
+</div>
+
+<section class="menu-section" id="menu">
+    <h2 class="section-title">Özel Seçim Menümüz</h2>
+    <p class="section-subtitle">Damak tadınıza uygun, özenle hazırlanmış çeşitler.</p>
+    <div class="menu-grid" id="menu-grid"></div>
+</section>
+
+<section id="contact">
+    <h2 class="section-title">Bize Ulaşın</h2>
+    <p class="section-subtitle">Soru, görüş veya rezervasyonlarınız için buradayız.</p>
+    
+    <div class="contact-container">
+        <div class="contact-info">
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="info-text">
+                    <h4>Adresimiz</h4>
+                    <p>Bağdat Caddesi No:123, Kadıköy / İstanbul</p>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                <div class="info-text">
+                    <h4>Telefon</h4>
+                    <a href="tel:+902160000000">+90 (216) 000 00 00</a>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                <div class="info-text">
+                    <h4>E-posta</h4>
+                    <a href="mailto:info@coffeetime.com">info@coffeetime.com</a>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.659972740993!2d29.02137931571878!3d40.98889497930278!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab8631c633a23%3A0x630230752528731!2zS2FkxLFrw7Y5LCDEsHN0YW5idWw!5e0!3m2!1str!2str!4v1645524142512!5m2!1str!2str" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <div class="contact-form-wrapper">
+            <h3 style="margin-bottom:20px;">Mesaj Gönderin</h3>
+            <form id="contact-form" onsubmit="handleContactSubmit(event)">
+                <div class="form-group">
+                    <label>Adınız Soyadınız</label>
+                    <input type="text" class="form-control" required placeholder="İsim Giriniz">
+                </div>
+                <div class="form-group">
+                    <label>E-posta Adresiniz</label>
+                    <input type="email" class="form-control" required placeholder="ornek@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Mesajınız</label>
+                    <textarea class="form-control" required placeholder="Size nasıl yardımcı olabiliriz?"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Gönder
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div class="modal-overlay" id="cart-modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('cart-modal')">×</span>
+        <h2 style="margin-bottom:20px; border-bottom:1px solid #eee; padding-bottom:10px;">Sepetiniz</h2>
+        <div id="cart-items-container"></div>
+        <div class="cart-total">Toplam: <span id="cart-total-price">0</span> TL</div>
+        <button class="submit-btn" style="margin-top:20px;" onclick="openCheckout()">Siparişi Tamamla</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="checkout-modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('checkout-modal')">×</span>
+        <h2>Ödeme Bilgileri</h2>
+        <form id="payment-form" onsubmit="processPayment(event)" style="margin-top:20px;">
+            <div class="form-group">
+                <label>Teslimat Adresi</label>
+                <input type="text" id="cust-address" class="form-control" required placeholder="Tam adresiniz...">
+            </div>
+            <div class="form-group">
+                <label>Kart Numarası</label>
+                <input type="tel" class="form-control" maxlength="19" placeholder="0000 0000 0000 0000" required>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <div class="form-group" style="flex:1">
+                    <label>S.K.T</label>
+                    <input type="tel" class="form-control" placeholder="AA/YY" maxlength="5" required>
+                </div>
+                <div class="form-group" style="flex:1">
+                    <label>CVV</label>
+                    <input type="tel" class="form-control" placeholder="***" maxlength="3" required>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Ödemeyi Onayla</button>
+        </form>
+    </div>
+</div>
+
+<div class="notification success" id="notification"><i class="fas fa-check-circle"></i> <span>İşlem Başarılı</span></div>
+
+<footer>
+    <div style="margin-bottom:10px; font-size:1.4rem; font-weight:700;">CoffeeTime</div>
+    <p>© 2025 CoffeeTime. Tüm hakları saklıdır.</p>
+    <div class="social-icons">
+        <i class="fab fa-instagram"></i>
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-facebook-f"></i>
+        <i class="fab fa-whatsapp"></i>
+    </div>
+</footer>
+
+<script>
+// --- VERİ ---
+const coffees = [
+    {
+        id: 1, 
+        isim: "Türk Kahvesi", 
+        ulke: "Türkiye", 
+        kategori: "Türkiye",
+        ozellik: "Geleneksel yöntemlerle hazırlanan, bol köpüklü ve yoğun lezzet.", 
+        fiyat: 90,
+        gorsel: "data:image/jpeg;base64,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",
+        gorsel_yedek: "https://images.unsplash.com/photo-1542385151-510b64736f3c?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        id: 3, isim: "Espresso", ulke: "İtalya", kategori: "Avrupa",
+        ozellik: "Koyu kremalı, zengin aromalı ve tam gövdeli İtalyan klasiği.", fiyat: 70,
+        gorsel: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=600&q=80",
+        gorsel_yedek: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        id: 4, isim: "Cappuccino", ulke: "İtalya", kategori: "Avrupa",
+        ozellik: "Mükemmel dengelenmiş espresso ve ipeksi süt köpüğü.", fiyat: 110,
+        gorsel: "https://images.unsplash.com/photo-1557006021-b85faa2bc5e2?auto=format&fit=crop&w=600&q=80",
+        gorsel_yedek: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        id: 5, isim: "Café au Lait", ulke: "Fransa", kategori: "Avrupa",
+        ozellik: "Fransız usulü bol sütlü, sabahların vazgeçilmezi.", fiyat: 115,
+        gorsel: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80",
+        gorsel_yedek: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        id: 6, isim: "Americano", ulke: "ABD", kategori: "Amerika",
+        ozellik: "Espresso çekirdeklerinin sıcak suyla yumuşatılmış hali.", fiyat: 90,
+        gorsel: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80",
+        gorsel_yedek: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        id: 7, isim: "Colombia Supremo", ulke: "Kolombiya", kategori: "Amerika",
+        ozellik: "Karamel notaları ve dengeli asidite ile dünya markası.", fiyat: 120,
+        gorsel: "https://images.unsplash.com/photo-1447933601400-b8a900504773?auto=format&fit=crop&w=600&q=80",
+        gorsel_yedek: "https://images.unsplash.com/photo-1529892485617-25f63cd7b1e9?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        id: 9, isim: "Kyoto Cold Brew", ulke: "Japonya", kategori: "Asya",
+        ozellik: "12 saatte damıtılarak demlenen, berrak ve meyvemsi soğuk kahve.", fiyat: 130,
+        gorsel: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80",
+        gorsel_yedek: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        id: 10, isim: "Ethiopia Yirgacheffe", ulke: "Etiyopya", kategori: "Afrika",
+        ozellik: "Çiçeksi aromalar ve turunçgil notaları ile kahvenin doğuşu.", fiyat: 125,
+        gorsel: "https://images.unsplash.com/photo-1514066558159-fc8c737ef259?auto=format&fit=crop&w=600&q=80",
+        gorsel_yedek: "https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=600&q=80"
+    }
+];
+
+// Placeholder görsel
+const placeholderImg = "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80";
+
+let cart = JSON.parse(localStorage.getItem('coffeetime_cart')) || [];
+
+// --- FONKSİYONLAR ---
+
+function displayMenu(list){
+    const container = document.getElementById("menu-grid");
+    container.innerHTML = list.map(c => `
+        <div class="card">
+            <img src="${c.gorsel}" alt="${c.isim}" onerror="this.src='${c.gorsel_yedek || placeholderImg}'">
+            <div class="card-body">
+                <div>
+                    <div class="card-header">
+                        <h3 style="font-size:1.1rem;">${c.isim}</h3>
+                        <span class="badge-country">${c.ulke}</span>
+                    </div>
+                    <p style="font-size:0.9rem;color:#666;line-height:1.4;">${c.ozellik}</p>
+                </div>
+                <div class="price-row">
+                    <span class="price">${c.fiyat} TL</span>
+                    <button class="add-btn" onclick="addToCart(${c.id})">
+                        <i class="fas fa-plus"></i> Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join("");
+}
+
+function filterCoffee(cat, btn){
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    if(cat === 'Tümü') displayMenu(coffees);
+    else displayMenu(coffees.filter(c => c.kategori === cat));
+}
+
+function addToCart(id){
+    const product = coffees.find(c => c.id === id);
+    const existing = cart.find(item => item.id === id);
+    if(existing) existing.qty++;
+    else cart.push({...product, qty: 1});
+    
+    saveAndUpdate();
+    showNotification(`"${product.isim}" sepete eklendi.`);
+}
+
+function removeFromCart(id){
+    cart = cart.filter(item => item.id !== id);
+    saveAndUpdate();
+    renderCartItems(); 
+}
+
+function saveAndUpdate(){
+    localStorage.setItem('coffeetime_cart', JSON.stringify(cart));
+    const count = cart.reduce((sum, item) => sum + item.qty, 0);
+    document.getElementById("cart-count").innerText = `(${count})`;
+}
+
+function handleContactSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const originalText = btn.innerHTML;
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gönderiliyor...';
+    
+    setTimeout(() => {
+        showNotification("Mesajınız başarıyla iletildi!");
+        e.target.reset();
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }, 1500);
+}
+
+function openCart(){
+    renderCartItems();
+    document.getElementById("cart-modal").style.display = "flex";
+    document.body.classList.add("no-scroll");
+}
+
+function renderCartItems(){
+    const container = document.getElementById("cart-items-container");
+    const totalElem = document.getElementById("cart-total-price");
+    
+    if(cart.length === 0){
+        container.innerHTML = `<div style="text-align:center; padding:30px; color:#999;"><i class="fas fa-mug-hot" style="font-size:30px; margin-bottom:10px; display:block;"></i>Sepetiniz boş.</div>`;
+        totalElem.innerText = "0";
+        return;
+    }
+
+    let total = 0;
+    container.innerHTML = cart.map(item => {
+        const itemTotal = item.fiyat * item.qty;
+        total += itemTotal;
+        return `
+        <div class="cart-item">
+            <div>
+                <div style="font-weight:600;">${item.isim}</div>
+                <div style="font-size:0.85rem; color:#888;">${item.qty} adet x ${item.fiyat} TL</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-weight:bold;">${itemTotal} TL</span>
+                <i class="fas fa-trash-alt" style="color:var(--accent); cursor:pointer;" onclick="removeFromCart(${item.id})"></i>
+            </div>
+        </div>`;
+    }).join("");
+    totalElem.innerText = total;
+}
+
+function openCheckout(){
+    if(cart.length === 0) return alert("Sepetiniz boş!");
+    closeModal('cart-modal');
+    document.getElementById("checkout-modal").style.display = "flex";
+}
+
+// --- GÜNCELLENMİŞ ÖDEME VE İNDİRME FONKSİYONLARI ---
+
+function downloadJSON(data, filename) {
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function processPayment(e){
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const address = document.getElementById("cust-address").value;
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sipariş Oluşturuluyor...';
+    
+    const totalAmount = cart.reduce((sum, item) => sum + (item.fiyat * item.qty), 0);
+    const orderDate = new Date();
+    const orderId = "SIP-" + Date.now();
+
+    const orderData = {
+        siparis_no: orderId,
+        tarih: orderDate.toLocaleString("tr-TR"),
+        musteri: {
+            adres: address
+        },
+        odeme_toplam: totalAmount + " TL",
+        urunler: cart.map(item => ({
+            urun_id: item.id,
+            urun_adi: item.isim,
+            adet: item.qty,
+            birim_fiyat: item.fiyat,
+            toplam_fiyat: item.fiyat * item.qty
+        }))
+    };
+
+    setTimeout(() => {
+        downloadJSON(orderData, `Siparis_${orderId}.json`);
+
+        cart = [];
+        saveAndUpdate();
+        closeModal('checkout-modal');
+        showNotification("Sipariş dosyası indirildi ve onaylandı!");
+        
+        btn.disabled = false;
+        btn.innerHTML = 'Ödemeyi Onayla';
+        e.target.reset();
+    }, 2000);
+}
+
+function closeModal(id){
+    document.getElementById(id).style.display = "none";
+    document.body.classList.remove("no-scroll");
+}
+
+function showNotification(msg){
+    const notif = document.getElementById("notification");
+    notif.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+    notif.classList.add("show");
+    setTimeout(() => notif.classList.remove("show"), 3000);
+}
+
+// Kapanış events
+window.onclick = function(e) {
+    if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
+}
+
+// Başlangıç
+window.onload = () => {
+    displayMenu(coffees);
+    saveAndUpdate();
+};
+</script>
+
+</body>
+</html>
