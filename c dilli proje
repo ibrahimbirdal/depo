@@ -1,0 +1,264 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_UYE 50
+#define DOSYA_ADI "uyeler.txt" 
+
+#define SURE_AYLIK 30
+#define SURE_3AYLIK 90
+#define SURE_YILLIK 365
+
+struct Uye {
+    char ad[30];
+    char soyad[30];
+    int paketGunu; 
+};
+
+
+struct Uye uyeler[MAX_UYE]; 
+int mevcutUyeSayisi = 0;    
+
+
+
+
+void verileriKaydet() {
+    FILE *fp = fopen(DOSYA_ADI, "w"); 
+    if (fp != NULL) {
+        int i;
+        for (i = 0; i < mevcutUyeSayisi; i++) {
+            
+            fprintf(fp, "%s %s %d\n", uyeler[i].ad, uyeler[i].soyad, uyeler[i].paketGunu);
+        }
+        fclose(fp);
+    }
+}
+
+
+void verileriYukle() {
+    FILE *fp = fopen(DOSYA_ADI, "r"); 
+    if (fp != NULL) {
+        mevcutUyeSayisi = 0;
+       
+        while(fscanf(fp, "%s %s %d", uyeler[mevcutUyeSayisi].ad, uyeler[mevcutUyeSayisi].soyad, &uyeler[mevcutUyeSayisi].paketGunu) != EOF) {
+            mevcutUyeSayisi++;
+            if(mevcutUyeSayisi >= MAX_UYE) break;
+        }
+        fclose(fp);
+    }
+}
+
+void menuGoster() {
+    printf("\n==== SPOR SALONU MENU ====\n");
+    printf("1. Uye kaydi olustur\n");    
+    printf("2. Paket satin alma\n");    
+    printf("3. Paket sorgulama\n");    
+    printf("4. Paket Iptali\n");          
+    printf("5. Uyelik Iptali (Silme)\n"); 
+    printf("6. Tum Uyeleri Listele\n");   
+    printf("7. Sistemden cik\n");
+    printf("--------------------------\n");
+    printf("Seciminiz: ");
+}
+
+void tumUyeleriListele() {
+    int i; 
+
+    printf("\n--- KAYITLI UYELER LISTESI ---\n");
+    if(mevcutUyeSayisi == 0) {
+        printf("Henuz kayitli kimse yok.\n");
+        return;
+    }
+    
+    printf("ID|\tAD SOYAD|\t\t|DURUM\n");
+    printf("--\t--------\t\t-----\n");
+    
+    for(i = 0; i < mevcutUyeSayisi; i++) {
+        printf("%d\t%s %s", i, uyeler[i].ad, uyeler[i].soyad);
+        
+        if(uyeler[i].paketGunu > 0) 
+            printf("\t\t(Paket: %d Gun Kaldi)\n", uyeler[i].paketGunu);
+        else 
+            printf("\t\t(Paketi Yok)\n");
+    }
+}
+
+void uyeKayit() {
+    if(mevcutUyeSayisi >= MAX_UYE) {
+        printf("\n Kapasite dolu, yeni uye alinamaz.\n");
+        return;
+    }
+
+    printf("\n--- UYE KAYIT EKRANI ---\n");
+    printf("Isim giriniz: ");
+    scanf("%s", uyeler[mevcutUyeSayisi].ad);
+    
+    printf("Soyisim giriniz: ");
+    scanf("%s", uyeler[mevcutUyeSayisi].soyad);
+    
+    
+    uyeler[mevcutUyeSayisi].paketGunu = 0; 
+    
+    printf("\n Kayit Basarili Uye ID: %d\n", mevcutUyeSayisi);
+    printf("MERHABA %s %s\n", uyeler[mevcutUyeSayisi].ad, uyeler[mevcutUyeSayisi].soyad);
+    
+    mevcutUyeSayisi++; 
+
+   
+    verileriKaydet();
+}
+
+
+void paketSatinAl() {
+    int id, secim, eklenecekGun; 
+    
+    printf("\n--- PAKET SATIN ALMA ---\n");
+    
+   
+    tumUyeleriListele();
+    
+    if(mevcutUyeSayisi == 0) return;
+
+    printf("\nIslem yapilacak Uye ID giriniz: ");
+    scanf("%d", &id);
+
+    if(id < 0 || id >= mevcutUyeSayisi) {
+        printf("Hatali ID girdiniz.\n");
+        return;
+    }
+
+    printf("\nLutfen bir paket seciniz:\n");
+    printf("1. 1 Aylik Paket (%d Gun)\n", SURE_AYLIK);
+    printf("2. 3 Aylik Paket (%d Gun)\n", SURE_3AYLIK);
+    printf("3. Yillik Paket  (%d Gun)\n", SURE_YILLIK);
+    printf("Seciminiz: ");
+    scanf("%d", &secim);
+
+    eklenecekGun = 0;
+
+    if(secim == 1) {
+        eklenecekGun = SURE_AYLIK;
+    } else if (secim == 2) {
+        eklenecekGun = SURE_3AYLIK;
+    } else if (secim == 3) {
+        eklenecekGun = SURE_YILLIK;
+    } else {
+        printf("Hatali paket secimi yaptiniz! Islem iptal edildi.\n");
+        return;
+    }
+
+    uyeler[id].paketGunu += eklenecekGun;
+    printf("\n ISLEM TAMAM. %s %s icin %d gun eklendi.\n", uyeler[id].ad, uyeler[id].soyad, eklenecekGun);
+    printf(" Guncel Bakiye: %d gun.\n", uyeler[id].paketGunu);
+
+   
+    verileriKaydet();
+}
+
+void paketGoruntule() {
+    int id;
+    printf("\n--- PAKET BILGISI SORGULAMA ---\n");
+    
+    printf("Sorgulanacak Uye ID  girin: ");
+    scanf("%d", &id);
+
+    if(id < 0 || id >= mevcutUyeSayisi) {
+        printf("Uye bulunamadi.\n");
+    } else {
+        printf("\nUye: %s %s\n", uyeler[id].ad, uyeler[id].soyad);
+        printf("Kalan Sure: %d Gun\n", uyeler[id].paketGunu);
+    }
+}
+
+void paketIptal() {
+    int id; 
+    printf("\n--- PAKET IPTALI ---\n");
+    tumUyeleriListele();
+    
+    if(mevcutUyeSayisi == 0) return;
+
+    printf("\nPaketi iptal edilecek Uye ID: ");
+    scanf("%d", &id);
+
+    if(id >= 0 && id < mevcutUyeSayisi) {
+        uyeler[id].paketGunu = 0;
+        printf(" %s %s adli uyenin paketi iptal edildi.\n", uyeler[id].ad, uyeler[id].soyad);
+        
+
+        verileriKaydet();
+    } else {
+        printf("Gecersiz ID.\n");
+    }
+}
+
+void uyelikIptal() {
+    int id, i; 
+    printf("\n--- UYELIK IPTALI (SILME) ---\n");
+    tumUyeleriListele();
+
+    if(mevcutUyeSayisi == 0) return;
+
+    printf("\nSilinecek Uye ID: ");
+    scanf("%d", &id);
+
+    if(id >= 0 && id < mevcutUyeSayisi) {
+        printf(" %s %s sistemden siliniyor...\n", uyeler[id].ad, uyeler[id].soyad);
+        
+        
+        for(i = id; i < mevcutUyeSayisi - 1; i++) {
+            uyeler[i] = uyeler[i+1];
+        }
+        
+        mevcutUyeSayisi--; 
+        printf(" Silme islemi basarili.\n");
+
+        
+        verileriKaydet();
+
+    } else {
+        printf("Gecersiz ID.\n");
+    }
+}
+
+int main() {
+    int secim;
+    
+   
+    verileriYukle();
+
+    while(1) 
+    {
+        menuGoster();
+        
+        scanf("%d", &secim);
+        
+        if(secim == 1) {
+            uyeKayit();
+        }
+        else if(secim == 2) {
+            paketSatinAl();
+        }
+        else if(secim == 3) {
+            paketGoruntule();
+        }
+        else if(secim == 4) {
+            paketIptal(); 
+        }
+        else if(secim == 5) {
+            uyelikIptal();
+        }
+        else if(secim == 6) {
+            tumUyeleriListele(); 
+        }
+        else if(secim == 7) {
+            printf("Cikis yapiliyor... Iyi gunler..\n");
+            
+            verileriKaydet();
+            break;
+        }
+        else {
+            printf("Hatali tuslama yaptiniz, tekrar deneyin.\n");
+        }
+    }
+    return 0;
+}
